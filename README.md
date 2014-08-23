@@ -21,7 +21,18 @@ I dont really have a clear plan except start working on it. However at a marco l
 * Production
 
 ## Architecture
-TODO
+This project will evolve as a set of independent services, independent means that the development, testing, deployment, upgrades etc all will be independent of other services.
+
+Evolution of a service will not dependent on other services.
+
+## Source Structure
+* All services are placed under services folder
+* Each service will be deployed as a full fledged site
+* Each service has following mendatory folders
+    * public_html
+    *  acceptance
+
+
 
 
 
