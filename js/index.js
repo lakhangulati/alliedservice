@@ -3,7 +3,12 @@ var _updcounter  = 0;
 
 __showActiveSessions = function (data, textStatus, jqXHR) {
 
-	var SelectOptions = "";
+var SelectOptions = "";
+
+
+SelectOptions = SelectOptions + "<table class=\"table\"><thead><tr><th>Doctor</th><th>Clinic Location</th><th>Patient Number</th></tr></thead><tbody>";
+
+
 	$.post( "modules/sessions/moduleEntry.php", {action:'getActiveSessions'}, function( data ) {
 		if ( data.callstatus == "OK" ) {
 			var sessions = data.sessions;
@@ -14,12 +19,18 @@ __showActiveSessions = function (data, textStatus, jqXHR) {
 				
 				var fullname = sobj.fullname;
 				var sname = sobj.sname;
-				var fullname = sobj.fullname;
 				var counter = sobj.counter;
-
-				SelectOptions = SelectOptions + "<p>" + fullname + "|" + sname + "|" + counter + "</p>";
+				
+				SelectOptions = SelectOptions + "<tr>";
+				SelectOptions = SelectOptions + "<td>" + fullname + "</td>";
+				SelectOptions = SelectOptions + "<td>" + sname + "</td>";
+				SelectOptions = SelectOptions + "<td><span class=\"badge badge-success\">" + counter + "</span></td>";
+				SelectOptions = SelectOptions + "</tr>";
+				
+				//SelectOptions = SelectOptions + "<p>" + fullname + "|" + sname + "|" + counter + "</p>";
 			}
-			
+			SelectOptions = SelectOptions + "</tbody></table>";
+
 			//alert(JSON.stringify(data));
 			$("#activesessions").html(SelectOptions);
 
