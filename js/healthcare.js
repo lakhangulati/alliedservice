@@ -26,54 +26,33 @@ function ajaxError(jqXHR, textStatus, errorThrown) {
 };
 
 
-__displaySessions_safe = function (data, textStatus, jqXHR) {
-
-	var SelectOptions = "";
-	$.post( "modules/sessions/moduleEntry.php", {action:'getSessions'}, function( data ) {
-		if ( data.callstatus == "OK" &&  data.IsVald == 1) {
-			var sessions = data.Sessions;
-			var sessionid = data.SessionId;
-			var counters = data.Counters;
-
-			for (var i = 0; i < sessions.length; i++) {
-				// SelectOptions = SelectOptions + " " +  sessions[i]  ;
-
-				SelectOptions = SelectOptions + "<div class=\"col-md-3\">";
-				SelectOptions = SelectOptions + "<h3>" + sessions[i] + "</h3>";
-				SelectOptions = SelectOptions + "<p><button class=\"btn btn-default\"><span class=\"glyphicon glyphicon-step-forward\" style=\"vertical-align:middle\"></span></button>";
-				SelectOptions = SelectOptions + "<span class=\"badge badge-success\">0</span>";
-				SelectOptions = SelectOptions + "<button class=\"btn btn-default\"><span class=\"glyphicon glyphicon-stop\" style=\"vertical-align:middle\"></span>";
-				SelectOptions = SelectOptions + "</button></p></div>";
-			}
-			
-			//alert(JSON.stringify(data));
-			$("#mysessions").html(SelectOptions);
-			
-		} else {
-			$("#mysessions").html("");
-		}
-	});
-};
-
-
 __displaySessions = function (data, textStatus, jqXHR) {
 
 	var SelectOptions = "";
 	$.post( "modules/sessions/moduleEntry.php", {action:'getSessions'}, function( data ) {
 		if ( data.callstatus == "OK" &&  data.IsVald == 1) {
-			var sessions = data.Sessions;
-			var sessionid = data.SessionId;
-			var counters = data.Counters;
+			//var sessions = data.Sessions;
+			//var sessionid = data.SessionId;
+			//var counters = data.Counters;
+			
+			var sessions = data.FromDB;
+			
 
 			for (var i = 0; i < sessions.length; i++) {
 				// SelectOptions = SelectOptions + " " +  sessions[i]  ;
+				var sobj = sessions[i];
 				
-				var sid = sessionid[i];
-				var counterid = "counter_" + sid;
-				var cntr = counters[i];
+				//var sid = sessionid[i];
+				//var counterid = "counter_" + sid;
+				//var cntr = counters[i];
+
+				var sid = sobj.id;
+				var counterid = "counter_" + sobj.id;
+				var cntr = sobj.counter;
+
 
 				SelectOptions = SelectOptions + "<div class=\"col-md-3\">";
-				SelectOptions = SelectOptions + "<h3>" + sessions[i] + "</h3>";
+				SelectOptions = SelectOptions + "<h3>" + sobj.sname + "</h3>";
 				SelectOptions = SelectOptions + "<p><button sessionid=\"" + sid + "\" class=\"btn btnnext btn-default\"><span class=\"glyphicon glyphicon-step-forward\" style=\"vertical-align:middle\"></span></button>";
 
 				SelectOptions = SelectOptions + "<span id=\"" + counterid + "\" class=\"badge badge-success\">" + cntr + "</span>";
