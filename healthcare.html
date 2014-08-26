@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>Bootstrap 101 Template</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <!-- Bootstrap -->
+      <link href="css/bootstrap.min.css" rel="stylesheet">
+
+      <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media
+         queries -->
+      <!-- WARNING: Respond.js doesn't work if you view the page
+         via file:// -->
+      <!--[if lt IE 9]>
+         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/
+            html5shiv.js"></script>
+         <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/
+            respond.min.js"></script>
+      <![endif]-->
+      <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+            <script src="https://code.jquery.com/jquery.js"></script>
+
+            <script>
+            $(function(){
+                  $("#includedContent").load("nav.html");
+            });
+            </script>
+
+   </head>
+   <body>
+
+      <div id="includedContent"></div>
+
+      <!-- Grid System
+      ====================================== -->
+      <div class="container">
+      	<div class="row">
+      		<div class="col-md-3">
+				<h3>Vasundhara</h3>
+				<p>
+
+				  <button id="vasBtnNxt" class="btn btn-default">
+					<span class="glyphicon glyphicon-step-forward" style="vertical-align:middle"></span>
+				  </button>
+				  <span id="vasCounter" class="badge badge-success">0</span>
+
+				  <button id="vasBtnStop" class="btn btn-default">
+					<span class="glyphicon glyphicon-stop" style="vertical-align:middle"></span>
+				  </button>
+
+				</p>
+      		</div>
+
+      		<div class="col-md-3">
+				<h3>Ghaziabad</h3>
+				<p>
+
+				  <button id="gzbBtnNxt" class="btn btn-default">
+					<span class="glyphicon glyphicon-step-forward" style="vertical-align:middle"></span>
+				  </button>
+				  <span id="gzbCounter" class="badge badge-success">0</span>
+				  <button id="gzbBtnStop" class="btn btn-default">
+					<span class="glyphicon glyphicon-stop" style="vertical-align:middle"></span>
+				  </button>
+				</p>
+      		</div>
+
+
+      		<div class="col-md-3">
+      			<h4>Account Access</h4>
+	      		<div id="frmsignin">
+					<p>
+						<label for="name">Username: </label>
+						<input type="text" id="username" name="username" />
+						<label for="pwd">Password: </label>
+						<input type="password" id="pwd" name="pwd" />
+					</p>
+					<button id="btnLogin" class="btn btn-default">
+						<span class="glyphicon glyphicon-log-in" style="vertical-align:middle"></span>
+					</button>
+					<h4 id="signinstatus"></h4>
+				</div>
+	      		<div id="loggedin">
+					<h4 id="loginuser"></h4>
+					<button id="btnLogout" class="btn btn-default">
+						<span class="glyphicon glyphicon-log-out" style="vertical-align:middle"></span>
+					</button>
+
+	      		</div>
+      		</div>
+
+
+
+      	</div>
+      </div>
+
+
+      <!-- Include all compiled plugins (below), or include individual files
+            as needed -->
+      <script src="js/bootstrap.min.js"></script>
+    	<script src="js/healthcare.js"></script>
+    	<script src="modules/auth/js/script.js"></script>
+   </body>
+</html>
+
+
