@@ -28,11 +28,20 @@ class SessionManager
 			self::init();
 		}
 
-		$query = "UPDATE qsessions SET counter = counter + 1 WHERE id = $id";
+		$tmnow = time();
+		$query = "UPDATE qsessions SET counter = counter + 1, updated = $tmnow WHERE id = $id";
 		if($stmt = self::$conn->prepare($query)) {
 			$stmt->execute();
 			$stmt->close();
 		}
+
+		$query = "UPDATE qsessions SET started = updated WHERE id = $id AND counter = 1";
+		if($stmt = self::$conn->prepare($query)) {
+			$stmt->execute();
+			$stmt->close();
+		}
+
+
 		return self::getCounter($id);
 	}
 
@@ -107,20 +116,24 @@ class SessionManager
 			self::init();
 		}
 
-		$query = "SELECT A.usr,B.fullname, A.sname,A.counter FROM qsessions A, users B WHERE counter > 0 AND A.usr = B.usr order by A.usr,A.sname";
+		$tmnow = time();
+		$query = "SELECT A.usr,B.fullname, A.sname,A.counter,A.started,A.updated FROM qsessions A, users B WHERE counter > 0 AND A.usr = B.usr order by A.usr,A.sname";
 		$retval = array();
 
 		if($stmt = self::$conn->prepare($query)) {
 			$stmt->execute();
 
 			/* bind result variables */
-			$stmt->bind_result($usr,$fullname,$sname,$counter);
+			$stmt->bind_result($usr,$fullname,$sname,$counter,$started,$updated);
 
 			/* fetch values */
 			while ($stmt->fetch()) {
 				$retval[] =  array('usr' => $usr,
 						'sname' => $sname,
 						'fullname' => $fullname,
+						'started' => $started,
+						'updated' => $updated,
+						'tmnow' => $tmnow,
 						'counter' => $counter);
 			}
 

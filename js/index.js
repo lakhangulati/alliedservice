@@ -6,7 +6,7 @@ __showActiveSessions = function (data, textStatus, jqXHR) {
 var SelectOptions = "";
 
 
-SelectOptions = SelectOptions + "<table class=\"table\"><thead><tr><th>Doctor</th><th>Clinic Location</th><th>Patient Number</th></tr></thead><tbody>";
+SelectOptions = SelectOptions + "<table class=\"table\"><thead><tr><th>Doctor</th><th>Clinic Location</th><th>Patient Number</th><th>Service Rate</th><th>Last Updated</th></tr></thead><tbody>";
 
 
 	$.post( "modules/sessions/moduleEntry.php", {action:'getActiveSessions'}, function( data ) {
@@ -20,11 +20,29 @@ SelectOptions = SelectOptions + "<table class=\"table\"><thead><tr><th>Doctor</t
 				var fullname = sobj.fullname;
 				var sname = sobj.sname;
 				var counter = sobj.counter;
+
+				var started = sobj.started;
+				var updated = sobj.updated;
+				var tmnow = sobj.tmnow;
+				
+				var servicerate = ((updated - started) * 10 ) / (60 * counter);
+				var lastupdated = (tmnow - updated) / 60;
+				
+				servicerate = Math.round(servicerate) ;
+				lastupdated = Math.round(lastupdated) ;
+//started
+//updated
+//tmnow
+
+
 				
 				SelectOptions = SelectOptions + "<tr>";
 				SelectOptions = SelectOptions + "<td>" + fullname + "</td>";
 				SelectOptions = SelectOptions + "<td>" + sname + "</td>";
 				SelectOptions = SelectOptions + "<td><span class=\"badge badge-success\">" + counter + "</span></td>";
+
+				SelectOptions = SelectOptions + "<td><span class=\"badge badge-success\">" + servicerate + " minutes / 10 patients</span></td>";
+				SelectOptions = SelectOptions + "<td><span class=\"badge badge-success\">" + lastupdated + " minutes before</span></td>";
 				SelectOptions = SelectOptions + "</tr>";
 				
 				//SelectOptions = SelectOptions + "<p>" + fullname + "|" + sname + "|" + counter + "</p>";
