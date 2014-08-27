@@ -32,6 +32,17 @@ class AuthDB {
 	}
 
 
+	function change_pwd($un, $pwd) {
+
+		$query = "UPDATE users SET usrpwd='$pwd' WHERE usr = '$un'";
+
+		if($stmt = $this->conn->prepare($query)) {
+			$stmt->execute();
+			$stmt->close();
+			return true;
+		}
+	}
+
 	function getUserRoles( $user ) {
 		$query = "SELECT role FROM usrroles where usr = ?";
 		$retval = array();

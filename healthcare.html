@@ -54,14 +54,49 @@
 				</div>
 	      		<div id="loggedin">
 					<h4 id="loginuser"></h4>
-					<button id="btnLogout" class="btn btn-default">
+
+					<button id="btnTogglePwdFrm" class="btn btn-default">
+						<span class="glyphicon glyphicon-lock" style="vertical-align:middle"></span>
+					</button>
+
+ 					<button id="btnLogout" class="btn btn-default">
 						<span class="glyphicon glyphicon-log-out" style="vertical-align:middle"></span>
 					</button>
 
+
+					<div id="frmchangepwd">
+						<div class="input-group input-group-lg">
+						  <span class="input-group-addon">
+							<span class="glyphicon glyphicon-lock"></span>
+						  </span>
+						  <input id="oldpwd" class="form-control" type="password" placeholder="Old Password">
+						</div>
+
+						<div class="input-group input-group-lg">
+						  <span class="input-group-addon">
+							<span class="glyphicon glyphicon-lock"></span>
+						  </span>
+						  <input id="newpwd" class="form-control" type="password" placeholder="New Password">
+						</div>
+
+						<div class="input-group input-group-lg">
+						  <span class="input-group-addon">
+							<span class="glyphicon glyphicon-lock"></span>
+						  </span>
+						  <input id="newpwdrepeat" class="form-control" type="password" placeholder="Repeat New Password">
+						</div>
+
+						<div class="input-group input-group-lg">
+							<button id="btnChangePwd" class="btn btn-default">
+								<span class="glyphicon glyphicon-circle-arrow-right" style="vertical-align:middle"></span>
+							</button>
+						</div>
+
+					</div>
+
+
 	      		</div>
       		</div>
-
-
 
       	</div>
       </div>

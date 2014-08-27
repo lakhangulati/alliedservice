@@ -31,6 +31,20 @@ class Membership {
 		}
 	}
 
+	function change_pwd($un, $pwd , $newpwd) {
+		$mysql = New AuthDB();
+		$ensure_credentials = $mysql->verify_Username_and_Pass($un, md5($pwd));
+
+		if($ensure_credentials) {
+			$mysql->change_pwd($un, md5($newpwd));
+			$ret_array = array('username'=>$un,'status'=>'OK');
+			echo json_encode($ret_array);
+		} else {
+			$ret_array = array('username'=>$un,'status'=>'FAIL','statusdetail'=>'Old password does not mnatch');
+			echo json_encode($ret_array);
+		}
+	}
+
 	function log_User_Out() {
 		if(isset($_SESSION['status'])) {
 			unset($_SESSION['status']);

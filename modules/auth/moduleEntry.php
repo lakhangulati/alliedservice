@@ -19,9 +19,29 @@ function getAuthStatus () {
 	echo json_encode($data);
 }
 
+function changePwd() {
+	$membership = new Membership();
+
+	$data = array();
+	$data['statusdetail'] = 'Not all parameters were supplied';
+	$data['status'] = 'FAIL';
+
+
+	$response = json_encode($data);
+
+	// Did the user enter a password/username and click submit?
+	if($_POST && !empty($_SESSION['User']) && !empty($_POST['oldpwd']) && !empty($_POST['newpwd'])) {
+		$response = $membership->change_pwd($_SESSION['User'], $_POST['oldpwd'] , $_POST['newpwd'] );
+	}
+
+	header('Content-Type: application/json; charset=utf8');
+	echo $response;
+}
+
 function authenticate () {
 	$membership = new Membership();
 
+	$response = json_encode("");
 	// Did the user enter a password/username and click submit?
 	if($_POST && !empty($_POST['username']) && !empty($_POST['pwd'])) {
 		$response = $membership->validate_User($_POST['username'], $_POST['pwd']);
@@ -70,6 +90,10 @@ function actionProcessor () {
 
 	if ( $action == "logout" ) {
 		logout();
+	}
+
+	if ( $action == "changePwd" ) {
+		changePwd();
 	}
 
 }

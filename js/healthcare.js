@@ -7,6 +7,7 @@ $(document).ready(function (){
 		    $('#loginuser').html("Welcome " + data.User);
 		    $("#frmsignin").hide(); 
 		    $("#loggedin").show(); 
+		    $("#frmchangepwd").hide(); 
 		    __displaySessions();
 		} else {
 		    $("#frmsignin").show(); 
@@ -102,6 +103,8 @@ $('#btnLogin').on('click', function (e) {
 		    $('#pwd').val("") ;
 		    $("#frmsignin").hide(); 
 		    $("#loggedin").show(); 
+		    $("#frmchangepwd").hide(); 
+		    
 		    __displaySessions();
 		} else {
 		    $("#frmsignin").show(); 
@@ -111,7 +114,6 @@ $('#btnLogin').on('click', function (e) {
 	});
 })
 
-
 $('#btnLogout').on('click', function (e) {
 	$.post( "modules/auth/moduleEntry.php", {action:'logout'}, function( data ) {
 	    $('#signinstatus').html("") ;
@@ -120,4 +122,35 @@ $('#btnLogout').on('click', function (e) {
 	    $("#mysessions").html("");
 	});
 })
+
+
+
+$('#btnTogglePwdFrm').on('click', function (e) {
+	if($("#frmchangepwd").is(":hidden"))
+	{
+	    $("#frmchangepwd").show(); 
+	} else {
+	    $("#frmchangepwd").hide(); 
+	}
+})
+
+$('#btnChangePwd').on('click', function (e) {
+	var oldpwd = $('#oldpwd').val();
+	var newpwd = $('#newpwd').val();
+	var newpwdrepeat = $('#newpwdrepeat').val();
+	
+	if ( newpwdrepeat == newpwd ) {
+		$.post( "modules/auth/moduleEntry.php", {action:'changePwd', oldpwd:oldpwd,newpwd:newpwd}, function( data ) {
+			if ( data.status == "OK") {
+			    $("#frmchangepwd").hide(); 
+		            alert("Password Changed");
+			} else {
+		            alert("ERROR:: " + data.statusdetail);
+			}
+		});
+	} else {
+		alert("ERROR:: New Passwords Does Not Match");
+	}
+})
+
 
