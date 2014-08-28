@@ -56,7 +56,8 @@ __displaySessions = function (data, textStatus, jqXHR) {
 				SelectOptions = SelectOptions + "<h3>" + sobj.sname + "</h3>";
 				SelectOptions = SelectOptions + "<p><button sessionid=\"" + sid + "\" class=\"btn btnnext btn-default\"><span class=\"glyphicon glyphicon-step-forward\" style=\"vertical-align:middle\"></span></button>";
 
-				SelectOptions = SelectOptions + "<span id=\"" + counterid + "\" class=\"badge badge-success\">" + cntr + "</span>";
+//				SelectOptions = SelectOptions + "<span id=\"" + counterid + "\" class=\"badge badge-success\">" + cntr + "</span>";
+				SelectOptions = SelectOptions + "<h1><span id=\"" + counterid + "\" class=\"label label-success\">" + cntr + "</span></h1>";
 
 				SelectOptions = SelectOptions + "<button sessionid=\"" + sid + "\" class=\"btn btnstop btn-default\"><span class=\"glyphicon glyphicon-stop\" style=\"vertical-align:middle\"></span></button>";
 				SelectOptions = SelectOptions + "</button></p></div>";
