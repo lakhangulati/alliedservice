@@ -56,7 +56,6 @@ __displaySessions = function (data, textStatus, jqXHR) {
 				SelectOptions = SelectOptions + "<h3>" + sobj.sname + "</h3>";
 				SelectOptions = SelectOptions + "<p><button sessionid=\"" + sid + "\" class=\"btn btnnext btn-default\"><span class=\"glyphicon glyphicon-step-forward\" style=\"vertical-align:middle\"></span></button>";
 
-//				SelectOptions = SelectOptions + "<span id=\"" + counterid + "\" class=\"badge badge-success\">" + cntr + "</span>";
 				SelectOptions = SelectOptions + "<h1><span id=\"" + counterid + "\" class=\"label label-success\">" + cntr + "</span></h1>";
 
 				SelectOptions = SelectOptions + "<button sessionid=\"" + sid + "\" class=\"btn btnstop btn-default\"><span class=\"glyphicon glyphicon-stop\" style=\"vertical-align:middle\"></span></button>";
@@ -68,10 +67,11 @@ __displaySessions = function (data, textStatus, jqXHR) {
 
 			$(".btnnext").on('click', function (e) {
 		   	    var sessionid = $(this).attr('sessionid');
-
+		   	    $(".btnnext").prop('disabled', true);
 				$.post( "modules/sessions/moduleEntry.php", {action:'setNextCounter', sessionid:sessionid}, function( data ) {
 					var counterid = "#counter_" + data.sessionid;
 					$(counterid).text(data.Counter);
+			   	    $(".btnnext").prop('disabled', false);
 				});
 			})
 
