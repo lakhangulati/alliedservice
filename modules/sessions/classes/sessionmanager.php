@@ -82,8 +82,8 @@ class SessionManager
 		if (  ! isset(self::$_name2id) ) {
 			self::init();
 		}
-
-		$query = "UPDATE qsessions SET counter = 0 WHERE id = $id";
+		$tmnow = time();
+		$query = "UPDATE qsessions SET counter = 0, updated = $tmnow WHERE id = $id";
 		if($stmt = self::$conn->prepare($query)) {
 			$stmt->execute();
 			$stmt->close();
