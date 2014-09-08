@@ -118,4 +118,22 @@ $(document).ready(function (e) { // pass the event object
     	__showActiveSessions();
     	__showLineDetails();
     });
+
 });
+
+$( "#lineToSubscribe" )
+	.focusout(function() {
+    	modSessions.setLineNo ( $('#lineToSubscribe').val());
+    	__showActiveSessions();
+    	__showLineDetails();
+});
+
+$(document).on("keypress", "#lineToSubscribe", function(e) {
+    if (e.which == 13) {
+    	modSessions.setLineNo ( $('#lineToSubscribe').val());
+    	__showActiveSessions();
+    	__showLineDetails();
+    }
+});
+
+
