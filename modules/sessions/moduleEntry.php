@@ -38,9 +38,21 @@ function getSessionsById () {
 
 	$data['callstatus'] = 'FAIL';
 	$line = -1;
+
 	if ( isset($_GET['line'] )  ) {
-		$line = $_GET['line'];
+		$intext = $_GET['line'];
+		$intext = trim($intext);
+		if (is_numeric($intext) && $intext > 0 ) {
+			$line = $intext;
+			$_SESSION['line'] = $line;
+		} 
+	} 
+	
+	
+	if ( $line < 0 && isset($_SESSION['line'] )  ) {
+		$line = $_SESSION['line'] ; 
 	}
+			
 
 	$data['line'] = $line;
 	if ( $line >= 0 ) {
@@ -57,10 +69,21 @@ function getLineDetails () {
 
 	$data['callstatus'] = 'FAIL';
 	$line = -1;
-	if ( isset($_GET['line'] )  ) {
-		$line = $_GET['line'];
-	}
 
+	if ( isset($_GET['line'] )  ) {
+		$intext = $_GET['line'];
+		$intext = trim($intext);
+		if (is_numeric($intext) && $intext > 0 ) {
+			$line = $intext;
+			$_SESSION['line'] = $line;
+		} 
+	} 
+		
+	
+	if ( $line <0 && isset($_SESSION['line'] )  ) {
+		$line = $_SESSION['line'] ; 
+	}
+	
 	$data['line'] = $line;
 
 	if ( $line >= 0 ) {
