@@ -5,9 +5,13 @@ modSessions.setUserName = function (username) {
 
 modSessions.setLineNo = function (lineNo) {
 	modSessions._line = lineNo;
+	$.cookie('lastline', lineNo, { expires : 30 });
 };
 
 modSessions.getLineNo = function () {
+	if (typeof modSessions._line === 'undefined') {
+		modSessions._line = $.cookie('lastline') ;
+	};
 	if (typeof modSessions._line === 'undefined') {
 		modSessions._line = -1 ;
 	};
@@ -139,5 +143,3 @@ $(document).on("keypress", "#lineToSubscribe", function(e) {
     	__showLineDetails();
     }
 });
-
-
