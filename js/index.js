@@ -15,7 +15,7 @@ modSessions.getLineNo = function () {
 };
 
 $(document).ajaxError(function(xhr, error) {
-	 alert( "Triggered ajaxError handler." );
+	 //alert( "Triggered ajaxError handler." );
 });
 
 
@@ -92,6 +92,7 @@ __showActiveSessions = function (data, textStatus, jqXHR) {
 				HeroUnits = HeroUnits + "<h3>" + itmcounter + "</h3>";
 				HeroUnits = HeroUnits + "<h4>" + itmrate + "</h4>";
 				HeroUnits = HeroUnits + "<h5>" + itmlastupd + "</h5>";
+				HeroUnits = HeroUnits + "<h6> Line Number: " + data.line + "</h6>";
 				HeroUnits = HeroUnits + "</div>";
 			}
 
@@ -113,7 +114,10 @@ setInterval(function() {
 }, 10000);
 
 $(document).ready(function (e) { // pass the event object
-    $("#submitLineScuscribe").click(function(){
+	__showActiveSessions();
+	__showLineDetails();
+
+	$("#submitLineScuscribe").click(function(){
     	modSessions.setLineNo ( $('#lineToSubscribe').val());
     	__showActiveSessions();
     	__showLineDetails();
