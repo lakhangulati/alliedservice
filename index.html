@@ -17,20 +17,18 @@
             respond.min.js"></script>
       <![endif]-->
       <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-		<script src="https://code.jquery.com/jquery.js"></script>
-		<script src="js/index.js"></script>
+       <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
 		<script>
 		$(function(){
 			$("#includedContent").load("nav.html");
-			// $("#includedCarousel").load("carousel.html");
+			//$("#includedCarousel").load("carousel.html");
 		});
 		</script>
    </head>
    <body>
 
       <div id="includedContent"></div>
-
 
       <!-- Carousel
       =========================== -->
@@ -39,7 +37,35 @@
       <!-- Grid System
       ====================================== -->
       <div class="container">
-      	<div id="activesessionshero" class="row">
+      	<div class="row">
+      	<h3></h3>
+      	</div>
+      	<div class="row">
+      	      		<div class="col-md-3">
+						<div class="input-group">
+							<span class="input-group-addon">Line</span>
+					        <input type="text" class="form-control" id="lineToSubscribe" placeholder="Line Number">
+					        <span class="input-group-btn">
+							  <button id="submitLineScuscribe" class="btn btn-default" type="button">
+								  <span class="glyphicon glyphicon-ok" style="vertical-align:middle"></span>
+							  </button>
+							</span>
+						</div>
+					</div>
+      	</div>
+
+      	<div class="row">
+      	      		<div id="activesessionshero"  class="col-md-3">
+      	      		</div>
+      	      		<div id="linedetails" class="col-md-4">
+      	      		</div>
+      	      		<div id="providernews"  class="col-md-3">
+      	      		</div>
+      	</div>
+
+      	<div class="row">
+      	      		<div class="col-md-6">
+					</div>
       	</div>
       </div>
 
@@ -47,6 +73,7 @@
       <!-- Include all compiled plugins (below), or include individual files
             as needed -->
       <script src="js/bootstrap.min.js"></script>
+	  <script src="js/index.js"></script>
    </body>
 </html>
 
