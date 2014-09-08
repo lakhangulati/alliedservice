@@ -1,36 +1,8 @@
 <?php
 session_start();
 
-require_once 'includes/constants.php';
-require_once 'classes/sessionmanager.php';
-
-function getSessionsold () {
-	$data = array();
-
-	$data['callstatus'] = 'OK';
-	$data['IsVald'] = 0;
-	$data['User'] = "";
-	$data['Sessions'] = array();
-	$data['SessionId'] = array();
-	$data['Counters'] = array();
-
-	$data['Sessions'][] = 'V1';
-	$data['Sessions'][] = 'V2';
-
-	$data['Counters'][] = 78;
-	$data['Counters'][] = 12;
-
-	$data['SessionId'][] = 4;
-	$data['SessionId'][] = 5;
-
-	if ( isset($_SESSION['IsVald'] )  ) {
-		$data['IsVald'] = $_SESSION['IsVald'] ;
-		$data['User'] = $_SESSION['User'];
-	}
-
-	header('Content-Type: application/json; charset=utf8');
-	echo json_encode($data);
-}
+require_once './includes/constants.php';
+require_once './classes/sessionmanager.php';
 
 function getSessions () {
 	$data = array();
@@ -61,6 +33,45 @@ function getActiveSessions () {
 	echo json_encode($data);
 }
 
+function getSessionsById () {
+	$data = array();
+
+	$data['callstatus'] = 'FAIL';
+	$line = -1;
+	if ( isset($_GET['line'] )  ) {
+		$line = $_GET['line'];
+	}
+
+	$data['line'] = $line;
+	if ( $line >= 0 ) {
+		$data['callstatus'] = 'OK';
+		$data['sessions'] = SessionManager::getSessionsById($line);
+	}
+
+	header('Content-Type: application/json; charset=utf8');
+	echo json_encode($data);
+}
+
+function getLineDetails () {
+	$data = array();
+
+	$data['callstatus'] = 'FAIL';
+	$line = -1;
+	if ( isset($_GET['line'] )  ) {
+		$line = $_GET['line'];
+	}
+
+	$data['line'] = $line;
+
+	if ( $line >= 0 ) {
+		$data = SessionManager::getLineDetails($line);
+		$data['callstatus'] = 'OK';
+		$data['line'] = $line;
+	}
+	
+	header('Content-Type: application/json; charset=utf8');
+	echo json_encode($data);
+}
 
 
 function setNextCounter () {
@@ -123,6 +134,14 @@ function actionProcessor () {
 		getActiveSessions();
 	}
 
+	if ( $action == "getSessionsById" ) {
+		getSessionsById();
+	}
+
+	if ( $action == "getLineDetails" ) {
+		getLineDetails();
+	}
+		
 }
 
 #echo SessionManager::setNextCounter(5);

@@ -45,6 +45,39 @@ class SessionManager
 		return self::getCounter($id);
 	}
 
+	public static function getLineDetails($line) {
+		if (  ! isset(self::$_name2id) ) {
+			self::init();
+		}
+	
+		$tmnow = time();
+		$query = "SELECT A.usr,B.fullname, A.sname,A.sector,A.address,A.contact FROM qsessions A, users B WHERE id = $line AND A.usr = B.usr ";
+		$retval = array();
+		$retval['found'] =  0;
+		
+		if($stmt = self::$conn->prepare($query)) {
+			$stmt->execute();
+	
+			/* bind result variables */
+			$stmt->bind_result($usr,$fullname,$sname,$sector,$address,$contact);
+	
+			/* fetch values */
+			while ($stmt->fetch()) {
+					$retval['found'] =  1;
+					$retval['usr'] =  $usr;
+					$retval['fullname'] =  $fullname;
+					$retval['sname'] =  $sname;
+					$retval['sector'] =  $sector;
+					$retval['address'] =  $address;
+					$retval['contact'] =  $contact;
+			}
+	
+			/* close statement */
+			$stmt->close();
+		}
+		return $retval;
+	}
+			
 	public static function resetCounter($id) {
 		if (  ! isset(self::$_name2id) ) {
 			self::init();
@@ -103,6 +136,38 @@ class SessionManager
 						'sname' => $sname,
 						'counter' => $counter);
 
+			}
+
+			/* close statement */
+			$stmt->close();
+		}
+		return $retval;
+	}
+
+	public static function getSessionsById($line) {
+		if (  ! isset(self::$_name2id) ) {
+			self::init();
+		}
+
+		$tmnow = time();
+		$query = "SELECT A.usr,B.fullname, A.sname,A.counter,A.started,A.updated FROM qsessions A, users B WHERE id = $line AND A.usr = B.usr ";
+		$retval = array();
+
+		if($stmt = self::$conn->prepare($query)) {
+			$stmt->execute();
+
+			/* bind result variables */
+			$stmt->bind_result($usr,$fullname,$sname,$counter,$started,$updated);
+
+			/* fetch values */
+			while ($stmt->fetch()) {
+				$retval[] =  array('usr' => $usr,
+						'sname' => $sname,
+						'fullname' => $fullname,
+						'started' => $started,
+						'updated' => $updated,
+						'tmnow' => $tmnow,
+						'counter' => $counter);
 			}
 
 			/* close statement */
