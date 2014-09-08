@@ -32,27 +32,19 @@ __displaySessions = function (data, textStatus, jqXHR) {
 	var SelectOptions = "";
 	$.post( "modules/sessions/moduleEntry.php", {action:'getSessions'}, function( data ) {
 		if ( data.callstatus == "OK" &&  data.IsVald == 1) {
-			//var sessions = data.Sessions;
-			//var sessionid = data.SessionId;
-			//var counters = data.Counters;
-			
 			var sessions = data.FromDB;
-			
 
 			for (var i = 0; i < sessions.length; i++) {
 				// SelectOptions = SelectOptions + " " +  sessions[i]  ;
 				var sobj = sessions[i];
 				
-				//var sid = sessionid[i];
-				//var counterid = "counter_" + sid;
-				//var cntr = counters[i];
-
 				var sid = sobj.id;
 				var counterid = "counter_" + sobj.id;
 				var cntr = sobj.counter;
 
 
 				SelectOptions = SelectOptions + "<div class=\"col-md-3\">";
+				SelectOptions = SelectOptions + "<h3> Line Number: " + sid + "</h3>";
 				SelectOptions = SelectOptions + "<h3>" + sobj.sname + "</h3>";
 				SelectOptions = SelectOptions + "<p><button sessionid=\"" + sid + "\" class=\"btn btnnext btn-default\"><span class=\"glyphicon glyphicon-step-forward\" style=\"vertical-align:middle\"></span></button>";
 
