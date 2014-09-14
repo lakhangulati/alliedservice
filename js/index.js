@@ -74,12 +74,13 @@ __showActiveSessions = function (data, textStatus, jqXHR) {
 				if ( lastupdated > 60 ) {
 					lastupdateunit = " hours";
 					lastupdated = lastupdated / 60;
+
+					if ( lastupdated > 24 ) {
+						lastupdateunit = " days";
+						lastupdated = lastupdated / 24;
+					} 
 				} 
 				
-				if ( lastupdated > 24 ) {
-					lastupdateunit = " days";
-					lastupdated = lastupdated / 24;
-				} 
 
 				lastupdated = Math.round(lastupdated) ;
 				
