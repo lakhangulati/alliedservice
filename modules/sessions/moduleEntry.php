@@ -22,17 +22,6 @@ function getSessions () {
 	echo json_encode($data);
 }
 
-function getActiveSessions () {
-	$data = array();
-
-	$data['callstatus'] = 'OK';
-
-	$data['sessions'] = SessionManager::getActiveSessions();
-
-	header('Content-Type: application/json; charset=utf8');
-	echo json_encode($data);
-}
-
 function getSessionsById () {
 	$data = array();
 
@@ -143,10 +132,6 @@ function actionProcessor () {
 		setNextCounter();
 	}
 
-	if ( $action == "getActiveSessions" ) {
-		getActiveSessions();
-	}
-
 	if ( $action == "getSessionsById" ) {
 		getSessionsById();
 	}
@@ -158,6 +143,5 @@ function actionProcessor () {
 }
 
 #echo SessionManager::setNextCounter(5);
-#echo json_encode(SessionManager::getActiveSessions());
 
 actionProcessor ();
