@@ -1,5 +1,8 @@
-var _vasCounter = 0;
-var _gzbCounter = 0;
+var mod_wl = {};
+mod_wl.lastcounter = new Object(); // or var map = {};
+mod_wl.livecounter = new Object(); // or var map = {};
+
+
 
 $(document).ready(function (){
 	$.post( "modules/auth/moduleEntry.php", {action:'getAuthStatus'}, function( data ) {
@@ -42,7 +45,9 @@ __displaySessions = function (data, textStatus, jqXHR) {
 				var counterid = "counter_" + sobj.id;
 				var cntr = sobj.counter;
 
-
+				mod_wl.lastcounter[sid] = cntr; 
+				mod_wl.livecounter[sid] = cntr; // or var map = {};
+				
 				SelectOptions = SelectOptions + "<div class=\"col-md-3\">";
 				SelectOptions = SelectOptions + "<h3> Line Number: " + sid + "</h3>";
 				SelectOptions = SelectOptions + "<h3>" + sobj.sname + "</h3>";
@@ -59,12 +64,9 @@ __displaySessions = function (data, textStatus, jqXHR) {
 
 			$(".btnnext").on('click', function (e) {
 		   	    var sessionid = $(this).attr('sessionid');
-		   	    $(".btnnext").prop('disabled', true);
-				$.post( "modules/sessions/moduleEntry.php", {action:'setNextCounter', sessionid:sessionid}, function( data ) {
-					var counterid = "#counter_" + data.sessionid;
-					$(counterid).text(data.Counter);
-			   	    $(".btnnext").prop('disabled', false);
-				});
+				var counterid = "#counter_" + sessionid;
+				mod_wl.livecounter[sessionid] = parseInt($(counterid).text()) + 1;
+				$(counterid).text(mod_wl.livecounter[sessionid]);
 			})
 
 			$(".btnstop").on('click', function (e) {
@@ -97,6 +99,8 @@ $('#btnLogin').on('click', function (e) {
 		    $("#frmsignin").hide(); 
 		    $("#loggedin").show(); 
 		    $("#frmchangepwd").hide(); 
+		    mod_wl.lastcounter = new Object(); // or var map = {};
+			mod_wl.livecounter = new Object(); // or var map = {};
 		    
 		    __displaySessions();
 		} else {
@@ -113,6 +117,10 @@ $('#btnLogout').on('click', function (e) {
 	    $("#frmsignin").show(); 
 	    $("#loggedin").hide(); 
 	    $("#mysessions").html("");
+
+	    mod_wl.lastcounter = new Object(); // or var map = {};
+		mod_wl.livecounter = new Object(); // or var map = {};
+
 	});
 })
 
@@ -146,4 +154,27 @@ $('#btnChangePwd').on('click', function (e) {
 	}
 })
 
+setInterval(function() {
+	// Verify if the current counter is different than last counter\
+	// If it is different send the counter to the server
+	// set the last counter with what is recieved from web
 
+	//mod_wl.lastcounter = new Object(); // or var map = {};
+	//mod_wl.livecounter = new Object(); // or var map = {};
+	
+	for (var sessionid in mod_wl.lastcounter) {
+		var counter = mod_wl.livecounter[sessionid];
+		var lastcounter = mod_wl.lastcounter[sessionid];
+		
+		if ( lastcounter != counter ) {
+			$.post( "modules/sessions/moduleEntry.php", {action:'setNextCounter', sessionid:sessionid,counter:counter}, function( data ) {
+				if ( data.callstatus == "OK") {
+					mod_wl.lastcounter[data.sessionid] =  data.counter;
+					// TODO - RAISE Alert if counter could not be set
+				} else {
+					// TODO - RAISE Alert
+				}
+			});
+		}
+	}
+}, 2000);

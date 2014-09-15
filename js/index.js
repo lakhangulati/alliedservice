@@ -113,9 +113,6 @@ __showActiveSessions = function (data, textStatus, jqXHR) {
 
 setInterval(function() {
 	__showActiveSessions();
-	__showLineDetails();
-	
-	
 }, 10000);
 
 $(document).ready(function (e) { // pass the event object

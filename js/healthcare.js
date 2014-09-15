@@ -1,6 +1,3 @@
-var _vasCounter = 0;
-var _gzbCounter = 0;
-
 $(document).ready(function (){
 	$.post( "modules/auth/moduleEntry.php", {action:'getAuthStatus'}, function( data ) {
 		if ( data.IsVald == 1) {
@@ -146,4 +143,9 @@ $('#btnChangePwd').on('click', function (e) {
 	}
 })
 
+setInterval(function() {
+	// Verify if the current counter is different than last counter\
+	// If it is different send the counter to the server
+	// set the last counter with what is recieved from web
+}, 1000);
 
