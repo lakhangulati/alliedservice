@@ -78,19 +78,6 @@ class SessionManager
 		return $retval;
 	}
 			
-	public static function resetCounter($id) {
-		if (  ! isset(self::$_name2id) ) {
-			self::init();
-		}
-		$tmnow = time();
-		$query = "UPDATE qsessions SET counter = 0, updated = $tmnow WHERE id = $id";
-		if($stmt = self::$conn->prepare($query)) {
-			$stmt->execute();
-			$stmt->close();
-		}
-		return self::getCounter($id);
-	}
-
 	public static function getCounter($id) {
 		if (  ! isset(self::$_name2id) ) {
 			self::init();
@@ -151,38 +138,6 @@ class SessionManager
 
 		$tmnow = time();
 		$query = "SELECT A.usr,B.fullname, A.sname,A.counter,A.started,A.updated FROM qsessions A, users B WHERE id = $line AND A.usr = B.usr ";
-		$retval = array();
-
-		if($stmt = self::$conn->prepare($query)) {
-			$stmt->execute();
-
-			/* bind result variables */
-			$stmt->bind_result($usr,$fullname,$sname,$counter,$started,$updated);
-
-			/* fetch values */
-			while ($stmt->fetch()) {
-				$retval[] =  array('usr' => $usr,
-						'sname' => $sname,
-						'fullname' => $fullname,
-						'started' => $started,
-						'updated' => $updated,
-						'tmnow' => $tmnow,
-						'counter' => $counter);
-			}
-
-			/* close statement */
-			$stmt->close();
-		}
-		return $retval;
-	}
-
-	public static function getActiveSessions() {
-		if (  ! isset(self::$_name2id) ) {
-			self::init();
-		}
-
-		$tmnow = time();
-		$query = "SELECT A.usr,B.fullname, A.sname,A.counter,A.started,A.updated FROM qsessions A, users B WHERE counter > 0 AND A.usr = B.usr order by A.usr,A.sname";
 		$retval = array();
 
 		if($stmt = self::$conn->prepare($query)) {

@@ -115,23 +115,6 @@ function setNextCounter () {
 	echo json_encode($data);
 }
 
-function resetCounter () {
-	$sessionid = $_POST['sessionid'];
-
-	$data = array();
-	$data['callstatus'] = 'FAIL';
-	$data['sessionid'] = $sessionid;
-	$data['Counter'] = -1;
-
-	if ( isset($_SESSION['IsVald'] )  ) {
-		$data['callstatus'] = 'OK';
-		$data['Counter'] = SessionManager::resetCounter($sessionid);
-	}
-	
-	header('Content-Type: application/json; charset=utf8');
-	echo json_encode($data);
-}
-
 
 function actionProcessor () {
 	$action = "NULL";
@@ -158,10 +141,6 @@ function actionProcessor () {
 
 	if ( $action == "setNextCounter" ) {
 		setNextCounter();
-	}
-
-	if ( $action == "resetCounter" ) {
-		resetCounter();
 	}
 
 	if ( $action == "getActiveSessions" ) {

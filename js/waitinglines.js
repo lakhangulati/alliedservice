@@ -71,11 +71,9 @@ __displaySessions = function (data, textStatus, jqXHR) {
 
 			$(".btnstop").on('click', function (e) {
 		   	    var sessionid = $(this).attr('sessionid');
-
-				$.post( "modules/sessions/moduleEntry.php", {action:'resetCounter', sessionid:sessionid}, function( data ) {
-					var counterid = "#counter_" + data.sessionid;
-					$(counterid).text(data.Counter);
-				});
+				var counterid = "#counter_" + sessionid;
+				$(counterid).text(0);
+				mod_wl.livecounter[sessionid] = 0;
 			})
 
 
