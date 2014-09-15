@@ -23,24 +23,24 @@ class SessionManager
 {
 	private static $conn;
 
-	public static function setNextCounter($id) {
+	public static function setNextCounter($id , $usr, $counter) {
 		if (  ! isset(self::$_name2id) ) {
 			self::init();
 		}
 
 		$tmnow = time();
-		$query = "UPDATE qsessions SET counter = counter + 1, updated = $tmnow WHERE id = $id";
+
+		$query = "UPDATE qsessions SET started = $tmnow WHERE id = $id AND counter = 0 AND usr = '$usr'";
 		if($stmt = self::$conn->prepare($query)) {
 			$stmt->execute();
 			$stmt->close();
 		}
-
-		$query = "UPDATE qsessions SET started = updated WHERE id = $id AND counter = 1";
+		
+		$query = "UPDATE qsessions SET counter = $counter , updated = $tmnow WHERE usr = '$usr' AND id = $id";
 		if($stmt = self::$conn->prepare($query)) {
 			$stmt->execute();
 			$stmt->close();
 		}
-
 
 		return self::getCounter($id);
 	}

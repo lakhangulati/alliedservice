@@ -99,12 +99,18 @@ function getLineDetails () {
 
 function setNextCounter () {
 	$sessionid = $_POST['sessionid'];
-
+	$counter = $_POST['counter'];
+	
 	$data = array();
-	$data['callstatus'] = 'OK';
+	$data['callstatus'] = 'FAIL';
 	$data['sessionid'] = $sessionid;
-	$data['Counter'] = SessionManager::setNextCounter($sessionid);
-
+	$data['counter'] = -1;
+	if ( isset($_SESSION['IsVald'] )  ) {
+		$data['callstatus'] = 'OK';
+		$usr = $_SESSION['User'] ;
+		$data['counter'] = SessionManager::setNextCounter($sessionid,$usr,$counter);
+	}
+	
 	header('Content-Type: application/json; charset=utf8');
 	echo json_encode($data);
 }
@@ -113,10 +119,15 @@ function resetCounter () {
 	$sessionid = $_POST['sessionid'];
 
 	$data = array();
-	$data['callstatus'] = 'OK';
+	$data['callstatus'] = 'FAIL';
 	$data['sessionid'] = $sessionid;
-	$data['Counter'] = SessionManager::resetCounter($sessionid);
+	$data['Counter'] = -1;
 
+	if ( isset($_SESSION['IsVald'] )  ) {
+		$data['callstatus'] = 'OK';
+		$data['Counter'] = SessionManager::resetCounter($sessionid);
+	}
+	
 	header('Content-Type: application/json; charset=utf8');
 	echo json_encode($data);
 }
