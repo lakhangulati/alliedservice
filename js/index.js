@@ -1,11 +1,13 @@
 var modSessions = {};
-modSessions.setUserName = function (username) {
-	modSessions._LoggedInUser = username;
-};
+modSessions.lastcounter = -1;
 
 modSessions.setLineNo = function (lineNo) {
-	modSessions._line = lineNo;
-	$.cookie('lastline', lineNo, { expires : 30 });
+	if ( isNaN(parseInt(lineNo)) ) {
+		modSessions._line = -1;
+	}  else {
+		modSessions._line = parseInt(lineNo);
+	}
+	$.cookie('lastline', modSessions._line, { expires : 30 });
 };
 
 modSessions.getLineNo = function () {
@@ -17,6 +19,7 @@ modSessions.getLineNo = function () {
 	};
 	return modSessions._line;
 };
+
 
 $(document).ajaxError(function(xhr, error) {
 	 //alert( "Triggered ajaxError handler." );
@@ -47,84 +50,87 @@ __showLineDetails = function (data, textStatus, jqXHR) {
 	});
 };
 
+__getCounterUI = function (sobj) {
+	var retval = '<div class="jumbotron">';
+
+	var counter = sobj.counter;
+	var started = sobj.started;
+	var updated = sobj.updated;
+	var tmnow = sobj.tmnow;
+	
+	modSessions.lastcounter = counter; 
+	
+	var servicerate = ((updated - started) * 10 ) / (60 * counter);
+	var lastupdated = (tmnow - updated) / 60;
+	
+	servicerate = Math.round(servicerate) ;
+	
+	var lastupdateunit = " minutes";
+	if ( lastupdated > 60 ) {
+		lastupdateunit = " hours";
+		lastupdated = lastupdated / 60;
+
+		if ( lastupdated > 24 ) {
+			lastupdateunit = " days";
+			lastupdated = lastupdated / 24;
+		} 
+	} 
+	
+
+	lastupdated = Math.round(lastupdated) ;
+	
+	var itmcounter = "<span class=\"label label-success\">" + counter + "</span>";
+	var itmrate = "<span class=\"label label-info\">" + servicerate + " minutes / 10 patients</span>";
+
+	if ( counter <= 0 ) {
+		itmcounter = "<span class=\"label label-danger\">" + counter + "</span>";
+		itmrate = '<span class="label label-default"> Not Started Yet</span>';
+	} 
+	
+	var itmlastupd = "<span class=\"label label-info\">" + lastupdated + lastupdateunit + " before</span>";
+	
+	retval = retval + "<h3>" + itmcounter + "</h3>";
+	retval = retval + "<h4>" + itmrate + "</h4>";
+	retval = retval + "<h5>" + itmlastupd + "</h5>";
+	retval = retval + "<h6> Line Number: " + modSessions.getLineNo() + "</h6>";
+	retval = retval + "</div>";	
+	
+	return retval;
+};
 
 __showActiveSessions = function (data, textStatus, jqXHR) {
 
-	var HeroUnits = '<div class="jumbotron">';
+	var counterUI = '';
 	var line = modSessions.getLineNo();
 	
-		$.get( "modules/sessions/moduleEntry.php", {action:'getSessionsById',line:line}, function( data ) {
+		$.get( "modules/sessions/moduleEntry.php", {action:'getSessionsById',line:line,counter:modSessions.lastcounter}, function( data ) {
 		if ( data.callstatus == "OK" ) {
 			var sessions = data.sessions;
-
-			for (var i = 0; i < sessions.length; i++) {
-				var sobj = sessions[i];
-				
-				var counter = sobj.counter;
-				var started = sobj.started;
-				var updated = sobj.updated;
-				var tmnow = sobj.tmnow;
-				
-				var servicerate = ((updated - started) * 10 ) / (60 * counter);
-				var lastupdated = (tmnow - updated) / 60;
-				
-				servicerate = Math.round(servicerate) ;
-				
-				var lastupdateunit = " minutes";
-				if ( lastupdated > 60 ) {
-					lastupdateunit = " hours";
-					lastupdated = lastupdated / 60;
-
-					if ( lastupdated > 24 ) {
-						lastupdateunit = " days";
-						lastupdated = lastupdated / 24;
-					} 
-				} 
-				
-
-				lastupdated = Math.round(lastupdated) ;
-				
-				var itmcounter = "<span class=\"label label-success\">" + counter + "</span>";
-				var itmrate = "<span class=\"label label-info\">" + servicerate + " minutes / 10 patients</span>";
-
-				if ( counter <= 0 ) {
-					itmcounter = "<span class=\"label label-danger\">" + counter + "</span>";
-					itmrate = '<span class="label label-default"> Not Started Yet</span>';
-				} 
-				
-				var itmlastupd = "<span class=\"label label-info\">" + lastupdated + lastupdateunit + " before</span>";
-				
-				HeroUnits = HeroUnits + "<h3>" + itmcounter + "</h3>";
-				HeroUnits = HeroUnits + "<h4>" + itmrate + "</h4>";
-				HeroUnits = HeroUnits + "<h5>" + itmlastupd + "</h5>";
-				HeroUnits = HeroUnits + "<h6> Line Number: " + data.line + "</h6>";
-				HeroUnits = HeroUnits + "</div>";
-			}
-
+			counterUI = counterUI + __getCounterUI(sessions );
 			//alert(JSON.stringify(data));
-			$("#activesessionshero").html(HeroUnits);
-
+			$("#activesessionshero").html(counterUI);
+	            setTimeout(
+	            		__showActiveSessions, /* Request next message */
+	                    1000 /* ..after 1 seconds */
+	                );
+  
 		} else {
-			$("#activesessionshero").html("");
-			$("#activesessions").html("");
+			//$("#activesessionshero").html("");
+            setTimeout(
+            		__showActiveSessions, /* Request next message */
+            		10000 /* ..after 1 seconds */
+             );
 		}
 	});
 };
 
 setInterval(function() {
-	__showActiveSessions();
+	//__showActiveSessions();
 }, 10000);
 
 $(document).ready(function (e) { // pass the event object
 	__showActiveSessions();
 	__showLineDetails();
-
-	$("#submitLineScuscribe").click(function(){
-    	modSessions.setLineNo ( $('#lineToSubscribe').val());
-    	__showActiveSessions();
-    	__showLineDetails();
-    });
-
 });
 
 $( "#lineToSubscribe" )
@@ -141,3 +147,5 @@ $(document).on("keypress", "#lineToSubscribe", function(e) {
     	__showLineDetails();
     }
 });
+
+

@@ -148,7 +148,7 @@ class SessionManager
 
 			/* fetch values */
 			while ($stmt->fetch()) {
-				$retval[] =  array('usr' => $usr,
+				$retval =  array('usr' => $usr,
 						'sname' => $sname,
 						'fullname' => $fullname,
 						'started' => $started,

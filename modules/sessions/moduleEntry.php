@@ -23,6 +23,11 @@ function getSessions () {
 }
 
 function getSessionsById () {
+	session_write_close();
+
+	$starttime = time();
+	$MAX_WAIT = 50;
+
 	$data = array();
 
 	$data['callstatus'] = 'FAIL';
@@ -34,21 +39,39 @@ function getSessionsById () {
 		if (is_numeric($intext) && $intext > 0 ) {
 			$line = $intext;
 			$_SESSION['line'] = $line;
-		} 
-	} 
-	
-	
-	if ( $line < 0 && isset($_SESSION['line'] )  ) {
-		$line = $_SESSION['line'] ; 
+		}
 	}
-			
+
+	$lastcounter = -1;
+	if ( isset($_GET['counter'] )  ) {
+		$lastcounter = $_GET['counter'];
+	}
+
+	if ( $line < 0 && isset($_SESSION['line'] )  ) {
+		$line = $_SESSION['line'] ;
+	}
 
 	$data['line'] = $line;
 	if ( $line >= 0 ) {
 		$data['callstatus'] = 'OK';
-		$data['sessions'] = SessionManager::getSessionsById($line);
+
+		$gap = time() - $starttime;
+		$sessions = SessionManager::getSessionsById($line);
+
+		$nterms = 1;
+		while ( $gap < $MAX_WAIT && $lastcounter == $sessions['counter'] ) {
+			sleep(1);
+			$nterms = $nterms + 1;
+			$gap = time() - $starttime;
+			$sessions = SessionManager::getSessionsById($line);
+		}
+		$data['sessions'] = $sessions;
 	}
 
+	$data['lastcounter'] = $lastcounter;
+	$data['nterms'] = $nterms;
+
+	session_start();
 	header('Content-Type: application/json; charset=utf8');
 	echo json_encode($data);
 }
@@ -65,14 +88,14 @@ function getLineDetails () {
 		if (is_numeric($intext) && $intext > 0 ) {
 			$line = $intext;
 			$_SESSION['line'] = $line;
-		} 
-	} 
-		
-	
-	if ( $line <0 && isset($_SESSION['line'] )  ) {
-		$line = $_SESSION['line'] ; 
+		}
 	}
-	
+
+
+	if ( $line <0 && isset($_SESSION['line'] )  ) {
+		$line = $_SESSION['line'] ;
+	}
+
 	$data['line'] = $line;
 
 	if ( $line >= 0 ) {
@@ -80,7 +103,7 @@ function getLineDetails () {
 		$data['callstatus'] = 'OK';
 		$data['line'] = $line;
 	}
-	
+
 	header('Content-Type: application/json; charset=utf8');
 	echo json_encode($data);
 }
@@ -89,7 +112,7 @@ function getLineDetails () {
 function setNextCounter () {
 	$sessionid = $_POST['sessionid'];
 	$counter = $_POST['counter'];
-	
+
 	$data = array();
 	$data['callstatus'] = 'FAIL';
 	$data['sessionid'] = $sessionid;
@@ -99,7 +122,7 @@ function setNextCounter () {
 		$usr = $_SESSION['User'] ;
 		$data['counter'] = SessionManager::setNextCounter($sessionid,$usr,$counter);
 	}
-	
+
 	header('Content-Type: application/json; charset=utf8');
 	echo json_encode($data);
 }
@@ -139,7 +162,7 @@ function actionProcessor () {
 	if ( $action == "getLineDetails" ) {
 		getLineDetails();
 	}
-		
+
 }
 
 #echo SessionManager::setNextCounter(5);
