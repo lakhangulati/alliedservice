@@ -35,7 +35,7 @@ class SessionManager
 			$stmt->execute();
 			$stmt->close();
 		}
-		
+
 		$query = "UPDATE qsessions SET counter = $counter , updated = $tmnow WHERE usr = '$usr' AND id = $id";
 		if($stmt = self::$conn->prepare($query)) {
 			$stmt->execute();
@@ -49,18 +49,18 @@ class SessionManager
 		if (  ! isset(self::$_name2id) ) {
 			self::init();
 		}
-	
+
 		$tmnow = time();
 		$query = "SELECT A.usr,B.fullname, A.sname,A.sector,A.address,A.contact FROM qsessions A, users B WHERE id = $line AND A.usr = B.usr ";
 		$retval = array();
 		$retval['found'] =  0;
-		
+
 		if($stmt = self::$conn->prepare($query)) {
 			$stmt->execute();
-	
+
 			/* bind result variables */
 			$stmt->bind_result($usr,$fullname,$sname,$sector,$address,$contact);
-	
+
 			/* fetch values */
 			while ($stmt->fetch()) {
 					$retval['found'] =  1;
@@ -71,13 +71,13 @@ class SessionManager
 					$retval['address'] =  $address;
 					$retval['contact'] =  $contact;
 			}
-	
+
 			/* close statement */
 			$stmt->close();
 		}
 		return $retval;
 	}
-			
+
 	public static function getCounter($id) {
 		if (  ! isset(self::$_name2id) ) {
 			self::init();
@@ -137,24 +137,20 @@ class SessionManager
 		}
 
 		$tmnow = time();
-		$query = "SELECT A.usr,B.fullname, A.sname,A.counter,A.started,A.updated FROM qsessions A, users B WHERE id = $line AND A.usr = B.usr ";
+		$query = "SELECT A.counter,A.started,A.updated FROM qsessions A WHERE id = $line ";
 		$retval = array();
 
 		if($stmt = self::$conn->prepare($query)) {
 			$stmt->execute();
 
 			/* bind result variables */
-			$stmt->bind_result($usr,$fullname,$sname,$counter,$started,$updated);
+			$stmt->bind_result($counter,$started,$updated);
 
 			/* fetch values */
 			while ($stmt->fetch()) {
-				$retval =  array('usr' => $usr,
-						'sname' => $sname,
-						'fullname' => $fullname,
-						'started' => $started,
+				$retval =  array('counter' => $counter , 'started' => $started,
 						'updated' => $updated,
-						'tmnow' => $tmnow,
-						'counter' => $counter);
+						'tmnow' => $tmnow );
 			}
 
 			/* close statement */
