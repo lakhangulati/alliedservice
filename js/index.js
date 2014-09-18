@@ -124,10 +124,6 @@ __showActiveSessions = function (data, textStatus, jqXHR) {
 	});
 };
 
-setInterval(function() {
-	//__showActiveSessions();
-}, 10000);
-
 $(document).ready(function (e) { // pass the event object
 	__showActiveSessions();
 	__showLineDetails();

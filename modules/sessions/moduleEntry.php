@@ -18,7 +18,7 @@ function getSessions () {
 
 	$data['FromDB'] = SessionManager::getSessions($_SESSION['User']);
 
-	header('Content-Type: application/json; charset=utf8');
+	header('Content-Type: application/json; charset=utf-8');
 	echo json_encode($data);
 }
 
@@ -52,13 +52,13 @@ function getSessionsById () {
 	}
 
 	$data['line'] = $line;
+	$nterms = 1;
 	if ( $line >= 0 ) {
 		$data['callstatus'] = 'OK';
 
 		$gap = time() - $starttime;
 		$sessions = SessionManager::getSessionsById($line);
 
-		$nterms = 1;
 		while ( $gap < $MAX_WAIT && $lastcounter == $sessions['counter'] ) {
 			sleep(1);
 			$nterms = $nterms + 1;
@@ -72,11 +72,12 @@ function getSessionsById () {
 	$data['nterms'] = $nterms;
 
 	session_start();
-	header('Content-Type: application/json; charset=utf8');
+	header('Content-Type: application/json; charset=utf-8');
 	echo json_encode($data);
 }
 
 function getLineDetails () {
+	session_write_close();
 	$data = array();
 
 	$data['callstatus'] = 'FAIL';
@@ -103,8 +104,8 @@ function getLineDetails () {
 		$data['callstatus'] = 'OK';
 		$data['line'] = $line;
 	}
-
-	header('Content-Type: application/json; charset=utf8');
+	session_start();
+	header('Content-Type: application/json; charset=utf-8');
 	echo json_encode($data);
 }
 
@@ -123,7 +124,7 @@ function setNextCounter () {
 		$data['counter'] = SessionManager::setNextCounter($sessionid,$usr,$counter);
 	}
 
-	header('Content-Type: application/json; charset=utf8');
+	header('Content-Type: application/json; charset=utf-8');
 	echo json_encode($data);
 }
 
@@ -142,7 +143,7 @@ function actionProcessor () {
 	if ( $action == "NULL"  ) {
 		$data = array();
 		$data['callstatus'] = 'FAIL';
-		header('Content-Type: application/json; charset=utf8');
+		header('Content-Type: application/json; charset=utf-8');
 		echo json_encode($data);
 		return;
 	}

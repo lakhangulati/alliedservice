@@ -4,6 +4,7 @@ session_start();
 require_once 'classes/auth.php';
 
 function getAuthStatus () {
+	session_write_close();
 	$data = array();
 
 	$data['callstatus'] = 'OK';
@@ -15,7 +16,8 @@ function getAuthStatus () {
 		$data['User'] = $_SESSION['User'];
 	}
 
-	header('Content-Type: application/json; charset=utf8');
+	session_start();
+	header('Content-Type: application/json; charset=utf-8');
 	echo json_encode($data);
 }
 
@@ -34,7 +36,7 @@ function changePwd() {
 		$response = $membership->change_pwd($_SESSION['User'], $_POST['oldpwd'] , $_POST['newpwd'] );
 	}
 
-	header('Content-Type: application/json; charset=utf8');
+	header('Content-Type: application/json; charset=utf-8');
 	echo $response;
 }
 
@@ -47,7 +49,7 @@ function authenticate () {
 		$response = $membership->validate_User($_POST['username'], $_POST['pwd']);
 	}
 
-	header('Content-Type: application/json; charset=utf8');
+	header('Content-Type: application/json; charset=utf-8');
 	echo $response;
 }
 
@@ -57,7 +59,7 @@ function logout () {
 	// If the user clicks the "Log Out" link on the index page.
 	$response = $membership->log_User_Out();
 
-	header('Content-Type: application/json; charset=utf8');
+	header('Content-Type: application/json; charset=utf-8');
 	echo $response;
 }
 
@@ -75,7 +77,7 @@ function actionProcessor () {
 	if ( $action == "NULL"  ) {
 		$data = array();
 		$data['callstatus'] = 'FAIL';
-		header('Content-Type: application/json; charset=utf8');
+		header('Content-Type: application/json; charset=utf-8');
 		echo json_encode($data);
 		return;
 	}
