@@ -118,19 +118,21 @@ __showActiveSessions = function (data, textStatus, jqXHR) {
 			//$("#activesessionshero").html("");
             setTimeout(
             		__showActiveSessions, /* Request next message */
-            		10000 /* ..after 1 seconds */
+            		1000 /* ..after 1 seconds */
              );
 		}
 	});
 };
 
 $(document).ready(function (e) { // pass the event object
+	modSessions.lastcounter = -1;
 	__showActiveSessions();
 	__showLineDetails();
 });
 
 $( "#lineToSubscribe" )
 	.focusout(function() {
+		modSessions.lastcounter = -1;
     	modSessions.setLineNo ( $('#lineToSubscribe').val());
     	__showActiveSessions();
     	__showLineDetails();
@@ -138,6 +140,7 @@ $( "#lineToSubscribe" )
 
 $(document).on("keypress", "#lineToSubscribe", function(e) {
     if (e.which == 13) {
+		modSessions.lastcounter = -1;
     	modSessions.setLineNo ( $('#lineToSubscribe').val());
     	__showActiveSessions();
     	__showLineDetails();
