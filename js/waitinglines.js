@@ -17,18 +17,45 @@ $(document).ready(function (){
 		    $("#loggedin").hide(); 
 		}
 	});
+
+
+	$(document).on('click', '.btnnext', function() {
+   	    var sessionid = $(this).attr('sessionid');
+		var counterid = "#counter_" + sessionid;
+		mod_wl.livecounter[sessionid] = parseInt($(counterid).text()) + 1;
+		$(counterid).text(mod_wl.livecounter[sessionid]);
+
+		var usrcounterid = "#usrcounter_" + sessionid;
+		$(usrcounterid).text(mod_wl.lastcounter[sessionid]);
+		$(".userstat").css("background-color","yellow");
+	});
+
+	$(document).on('click', '.btnstop', function() {
+   	    var sessionid = $(this).attr('sessionid');
+		var counterid = "#counter_" + sessionid;
+		$(counterid).text(0);
+		mod_wl.livecounter[sessionid] = 0;
+
+		var usrcounterid = "#usrcounter_" + sessionid;
+		$(usrcounterid).text(mod_wl.lastcounter[sessionid]);
+		$(".userstat").css("background-color","yellow");
+	});
 });
 
 
-$( document ).ajaxError(function(xhr, error) {
-	 console.debug(xhr); console.debug(error);
-  alert( "Triggered ajaxError handler." );
+$(document).ajaxError(function( event, request, settings ) {
+    //When XHR Status code is 0 there is no connection with the server
+    if (request.status == 0){ 
+    	
+		$(".userstat").css("background-color","red");
+        //alert("Communication with the server is lost!");
+    } 
 });
 
-function ajaxError(jqXHR, textStatus, errorThrown) {
-        alert('$.post error: ' + textStatus + ' : ' + errorThrown);
+mod_wl.handleConnFailure = function () {
+	// Record the timestamp it failed last time if not already recorded
+	// Change the color of 
 };
-
 
 __displaySessions = function (data, textStatus, jqXHR) {
 
@@ -43,6 +70,7 @@ __displaySessions = function (data, textStatus, jqXHR) {
 				
 				var sid = sobj.id;
 				var counterid = "counter_" + sobj.id;
+				var usrcounterid = "usrcounter_" + sobj.id;
 				var cntr = sobj.counter;
 
 				mod_wl.lastcounter[sid] = cntr; 
@@ -53,7 +81,9 @@ __displaySessions = function (data, textStatus, jqXHR) {
 				SelectOptions = SelectOptions + "<h3>" + sobj.sname + "</h3>";
 				SelectOptions = SelectOptions + "<p><button sessionid=\"" + sid + "\" class=\"btn btnnext btn-default\"><span class=\"glyphicon glyphicon-step-forward\" style=\"vertical-align:middle\"></span></button>";
 
-				SelectOptions = SelectOptions + "<h1><span id=\"" + counterid + "\" class=\"label label-success\">" + cntr + "</span></h1>";
+				SelectOptions = SelectOptions + "<h1><span id=\"" + counterid + "\" class=\"label label-success\">" + cntr + "</span>";
+
+				SelectOptions = SelectOptions + "<span id=\"" + usrcounterid + "\" class=\"label userstat\">" + cntr + "</span></h1>";
 
 				SelectOptions = SelectOptions + "<button sessionid=\"" + sid + "\" class=\"btn btnstop btn-default\"><span class=\"glyphicon glyphicon-stop\" style=\"vertical-align:middle\"></span></button>";
 				SelectOptions = SelectOptions + "</button></p></div>";
@@ -61,21 +91,6 @@ __displaySessions = function (data, textStatus, jqXHR) {
 			
 			//alert(JSON.stringify(data));
 			$("#mysessions").html(SelectOptions);
-
-			$(".btnnext").on('click', function (e) {
-		   	    var sessionid = $(this).attr('sessionid');
-				var counterid = "#counter_" + sessionid;
-				mod_wl.livecounter[sessionid] = parseInt($(counterid).text()) + 1;
-				$(counterid).text(mod_wl.livecounter[sessionid]);
-			})
-
-			$(".btnstop").on('click', function (e) {
-		   	    var sessionid = $(this).attr('sessionid');
-				var counterid = "#counter_" + sessionid;
-				$(counterid).text(0);
-				mod_wl.livecounter[sessionid] = 0;
-			})
-
 
 		} else {
 			$("#mysessions").html("");
@@ -156,9 +171,6 @@ setInterval(function() {
 	// Verify if the current counter is different than last counter\
 	// If it is different send the counter to the server
 	// set the last counter with what is recieved from web
-
-	//mod_wl.lastcounter = new Object(); // or var map = {};
-	//mod_wl.livecounter = new Object(); // or var map = {};
 	
 	for (var sessionid in mod_wl.lastcounter) {
 		var counter = mod_wl.livecounter[sessionid];
@@ -167,7 +179,10 @@ setInterval(function() {
 		if ( lastcounter != counter ) {
 			$.post( "modules/sessions/moduleEntry.php", {action:'setNextCounter', sessionid:sessionid,counter:counter}, function( data ) {
 				if ( data.callstatus == "OK") {
+					var usrcounterid = "#usrcounter_" + data.sessionid;
 					mod_wl.lastcounter[data.sessionid] =  data.counter;
+					$(usrcounterid).text(mod_wl.lastcounter[data.sessionid]);
+					$(".userstat").css("background-color","green");
 					// TODO - RAISE Alert if counter could not be set
 				} else {
 					// TODO - RAISE Alert
