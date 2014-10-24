@@ -27,7 +27,6 @@ $(document).ready(function (){
 
 		var usrcounterid = "#usrcounter_" + sessionid;
 		$(usrcounterid).text(mod_wl.lastcounter[sessionid]);
-		$(".userstat").css("background-color","yellow");
 	});
 
 	$(document).on('click', '.btnstop', function() {
@@ -38,7 +37,6 @@ $(document).ready(function (){
 
 		var usrcounterid = "#usrcounter_" + sessionid;
 		$(usrcounterid).text(mod_wl.lastcounter[sessionid]);
-		$(".userstat").css("background-color","yellow");
 	});
 });
 
