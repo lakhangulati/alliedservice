@@ -109,6 +109,12 @@ function getLineDetails () {
 	echo json_encode($data);
 }
 
+function updateResponse ($line) {
+	$myfile = fopen("${line}.json", "w");
+	$data = SessionManager::getSessionsById($line);;
+	fwrite($myfile, json_encode($data));
+	fclose($myfile);
+}
 
 function setNextCounter () {
 	$sessionid = $_POST['sessionid'];
@@ -122,6 +128,7 @@ function setNextCounter () {
 		$data['callstatus'] = 'OK';
 		$usr = $_SESSION['User'] ;
 		$data['counter'] = SessionManager::setNextCounter($sessionid,$usr,$counter);
+		updateResponse($sessionid);
 	}
 
 	header('Content-Type: application/json; charset=utf-8');
