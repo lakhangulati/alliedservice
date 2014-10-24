@@ -125,7 +125,6 @@ __showActiveSessions = function (data, textStatus, jqXHR) {
 };
 
 $(document).ready(function (e) { // pass the event object
-	modSessions.lastcounter = -1;
 	__showActiveSessions();
 	__showLineDetails();
 });
