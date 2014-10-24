@@ -74,14 +74,17 @@ __displaySessions = function (data, textStatus, jqXHR) {
 				mod_wl.lastcounter[sid] = cntr; 
 				mod_wl.livecounter[sid] = cntr; // or var map = {};
 				
+				var usrstatus = '<span id=' + usrcounterid + ' class="badge userstat"> ' + cntr + '</span></h1>';
+				
 				SelectOptions = SelectOptions + "<div class=\"col-md-3\">";
 				SelectOptions = SelectOptions + "<h3> Line Number: " + sid + "</h3>";
 				SelectOptions = SelectOptions + "<h3>" + sobj.sname + "</h3>";
 				SelectOptions = SelectOptions + "<p><button sessionid=\"" + sid + "\" class=\"btn btnnext btn-default\"><span class=\"glyphicon glyphicon-step-forward\" style=\"vertical-align:middle\"></span></button>";
 
 				SelectOptions = SelectOptions + "<h1><span id=\"" + counterid + "\" class=\"label label-success\">" + cntr + "</span>";
+				SelectOptions = SelectOptions + usrstatus ;
 
-				SelectOptions = SelectOptions + "<span id=\"" + usrcounterid + "\" class=\"label userstat\">" + cntr + "</span></h1>";
+				//SelectOptions = SelectOptions + '<span id=' + usrcounterid + ' class="badge userstat"> ' + cntr + '</span></h1>';
 
 				SelectOptions = SelectOptions + "<button sessionid=\"" + sid + "\" class=\"btn btnstop btn-default\"><span class=\"glyphicon glyphicon-stop\" style=\"vertical-align:middle\"></span></button>";
 				SelectOptions = SelectOptions + "</button></p></div>";
