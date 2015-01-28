@@ -99,34 +99,21 @@ __getCounterUI = function (sobj) {
 };
 
 __showActiveSessions = function (data, textStatus, jqXHR) {
-
 	var counterUI = '';
 	var line = modSessions.getLineNo();
-	
-		$.get( "modules/sessions/moduleEntry.php", {action:'getSessionsById',line:line,counter:modSessions.lastcounter}, function( data ) {
-		if ( data.callstatus == "OK" ) {
-			var sessions = data.sessions;
-			counterUI = counterUI + __getCounterUI(sessions );
-			//alert(JSON.stringify(data));
-			$("#activesessionshero").html(counterUI);
-	            setTimeout(
-	            		__showActiveSessions, /* Request next message */
-	                    1000 /* ..after 1 seconds */
-	                );
-  
-		} else {
-			//$("#activesessionshero").html("");
-            setTimeout(
-            		__showActiveSessions, /* Request next message */
-            		1000 /* ..after 1 seconds */
-             );
-		}
+	var jsonname = 'modules/sessions/' + line + '.json';
+
+	$.getJSON( jsonname, function( data ) {
+		counterUI = counterUI + __getCounterUI(data );
+		$("#activesessionshero").html(counterUI);
 	});
 };
+
 
 $(document).ready(function (e) { // pass the event object
 	__showActiveSessions();
 	__showLineDetails();
+	setInterval(__showActiveSessions,60000);
 });
 
 $( "#lineToSubscribe" )
