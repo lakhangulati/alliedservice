@@ -22,58 +22,12 @@ function getSessions () {
 	echo json_encode($data);
 }
 
-function getSessionsById () {
-	session_write_close();
-
-	$starttime = time();
-	$MAX_WAIT = 50;
-
+function getServerTime () {
 	$data = array();
-
-	$data['callstatus'] = 'FAIL';
-	$line = -1;
-
-	if ( isset($_GET['line'] )  ) {
-		$intext = $_GET['line'];
-		$intext = trim($intext);
-		if (is_numeric($intext) && $intext > 0 ) {
-			$line = $intext;
-			$_SESSION['line'] = $line;
-		}
-	}
-
-	$lastcounter = -1;
-	if ( isset($_GET['counter'] )  ) {
-		$lastcounter = $_GET['counter'];
-	}
-
-	if ( $line < 0 && isset($_SESSION['line'] )  ) {
-		$line = $_SESSION['line'] ;
-	}
-
-	$data['line'] = $line;
-	$nterms = 1;
-	if ( $line >= 0 ) {
-		$data['callstatus'] = 'OK';
-
-		$gap = time() - $starttime;
-		$sessions = SessionManager::getSessionsById($line);
-
-		while ( $gap < $MAX_WAIT && $lastcounter == $sessions['counter'] ) {
-			sleep(1);
-			$nterms = $nterms + 1;
-			$gap = time() - $starttime;
-			$sessions = SessionManager::getSessionsById($line);
-		}
-		$data['sessions'] = $sessions;
-	}
-
-	$data['lastcounter'] = $lastcounter;
-	$data['nterms'] = $nterms;
-
-	session_start();
-	header('Content-Type: application/json; charset=utf-8');
-	echo json_encode($data);
+	$data['tmnow'] = time();
+	#header('Content-Type: application/json; charset=utf-8');
+	#echo json_encode($data);
+	echo time();
 }
 
 function getLineDetails () {
@@ -155,6 +109,11 @@ function actionProcessor () {
 		return;
 	}
 
+	if ( $action == "getServerTime" ) {
+		getServerTime();
+	}
+	
+	
 	if ( $action == "getSessions" ) {
 		getSessions();
 	}
