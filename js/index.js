@@ -103,9 +103,12 @@ __showActiveSessions = function (data, textStatus, jqXHR) {
 	var line = modSessions.getLineNo();
 	var jsonname = 'modules/sessions/' + line + '.json';
 
-	$.getJSON( jsonname, function( data ) {
-		counterUI = counterUI + __getCounterUI(data );
-		$("#activesessionshero").html(counterUI);
+	$.get( "modules/sessions/moduleEntry.php", {action:'getServerTime'}, function( servertime ) {
+		$.getJSON( jsonname, function( data ) {
+			data.tmnow = servertime;
+			counterUI = counterUI + __getCounterUI(data );
+			$("#activesessionshero").html(counterUI);
+		});
 	});
 };
 
@@ -113,7 +116,7 @@ __showActiveSessions = function (data, textStatus, jqXHR) {
 $(document).ready(function (e) { // pass the event object
 	__showActiveSessions();
 	__showLineDetails();
-	setInterval(__showActiveSessions,60000);
+	setInterval(__showActiveSessions,5000);
 });
 
 $( "#lineToSubscribe" )
