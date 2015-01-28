@@ -1,5 +1,6 @@
 var modSessions = {};
 modSessions.lastcounter = -1;
+modSessions.timer = 30;
 
 modSessions.setLineNo = function (lineNo) {
 	if ( isNaN(parseInt(lineNo)) ) {
@@ -20,13 +21,7 @@ modSessions.getLineNo = function () {
 	return modSessions._line;
 };
 
-
-$(document).ajaxError(function(xhr, error) {
-	 //alert( "Triggered ajaxError handler." );
-});
-
-
-__showLineDetails = function (data, textStatus, jqXHR) {
+modSessions.showLineDetails = function (data, textStatus, jqXHR) {
 //	var HeroUnits = '<h1><span class="label label-primary">Active Sessions</span></h1>';
 	var HeroUnits = '<div class="jumbotron">';
 	var line = modSessions.getLineNo();
@@ -50,7 +45,7 @@ __showLineDetails = function (data, textStatus, jqXHR) {
 	});
 };
 
-__getCounterUI = function (sobj) {
+modSessions.getCounterUI = function (sobj) {
 	var retval = '<div class="jumbotron">';
 
 	var counter = sobj.counter;
@@ -98,7 +93,13 @@ __getCounterUI = function (sobj) {
 	return retval;
 };
 
-__showActiveSessions = function (data, textStatus, jqXHR) {
+$(document).ajaxError(function(xhr, error) {
+	 //alert( "Triggered ajaxError handler." );
+});
+
+
+
+modSessions.showActiveSessions = function (data, textStatus, jqXHR) {
 	var counterUI = '';
 	var line = modSessions.getLineNo();
 	var jsonname = 'modules/sessions/' + line + '.json';
@@ -106,7 +107,7 @@ __showActiveSessions = function (data, textStatus, jqXHR) {
 	$.get( "modules/sessions/moduleEntry.php", {action:'getServerTime'}, function( servertime ) {
 		$.getJSON( jsonname, function( data ) {
 			data.tmnow = servertime;
-			counterUI = counterUI + __getCounterUI(data );
+			counterUI = counterUI + modSessions.getCounterUI(data );
 			$("#activesessionshero").html(counterUI);
 		});
 	});
@@ -114,25 +115,25 @@ __showActiveSessions = function (data, textStatus, jqXHR) {
 
 
 $(document).ready(function (e) { // pass the event object
-	__showActiveSessions();
-	__showLineDetails();
-	setInterval(__showActiveSessions,5000);
+	modSessions.showActiveSessions();
+	modSessions.showLineDetails();
+	setInterval(modSessions.showActiveSessions,modSessions.timer * 1000);
 });
 
 $( "#lineToSubscribe" )
 	.focusout(function() {
 		modSessions.lastcounter = -1;
     	modSessions.setLineNo ( $('#lineToSubscribe').val());
-    	__showActiveSessions();
-    	__showLineDetails();
+    	modSessions.showActiveSessions();
+    	modSessions.showLineDetails();
 });
 
 $(document).on("keypress", "#lineToSubscribe", function(e) {
     if (e.which == 13) {
 		modSessions.lastcounter = -1;
     	modSessions.setLineNo ( $('#lineToSubscribe').val());
-    	__showActiveSessions();
-    	__showLineDetails();
+    	modSessions.showActiveSessions();
+    	modSessions.showLineDetails();
     }
 });
 
