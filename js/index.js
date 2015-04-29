@@ -27,7 +27,7 @@ modSessions.showLineDetails = function (data, textStatus, jqXHR) {
 	var line = modSessions.getLineNo();
 
 		$.get( "modules/sessions/moduleEntry.php", {action:'getLineDetails',line:line}, function( data ) {
-		if ( data.callstatus == "OK" ) {
+		if ( data.callstatus == "fine" ) {
 			if ( data.found > 0 ) {
 				HeroUnits = HeroUnits + "<h3>" + data.fullname + "</h3>";
 				HeroUnits = HeroUnits + "<h4>" + data.sector + "</h4>";
