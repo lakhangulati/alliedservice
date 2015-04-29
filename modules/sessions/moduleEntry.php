@@ -54,6 +54,7 @@ function getLineDetails () {
 	$data['line'] = $line;
 
 	if ( $line >= 0 ) {
+		$data = '{ \"msg\" :'' ;
 		$data = SessionManager::getLineDetails($line);
 		$data['callstatus'] = 'OK';
 		$data['line'] = $line;
