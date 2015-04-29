@@ -63,18 +63,13 @@ class SessionManager
 
 			/* fetch values */
 			while ($stmt->fetch()) {
-				{
-				"sys": 
-				   {
-					$retval['found'] =  1;
-					$retval['usr'] =  $usr;
-					$retval['fullname'] =  $fullname;
-					$retval['sname'] =  $sname;
-					$retval['sector'] =  $sector;
-					$retval['address'] =  $address;
-					$retval['contact'] =  $contact;
-				   }
-				}
+				$retval['found'] =  1;
+				$retval['usr'] =  $usr;
+				$retval['fullname'] =  $fullname;
+				$retval['sname'] =  $sname;
+				$retval['sector'] =  $sector;
+				$retval['address'] =  $address;
+				$retval['contact'] =  $contact;
 			}
 				
 			/* close statement */
